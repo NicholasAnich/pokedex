@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext, Fragment } from 'react';
 import axios from 'axios';
 import { PokedexContext } from './contexts/pokedex.context';
+import './app.styles.scss';
 
 const baseUrl = 'https://pokeapi.co/api/v2/pokemon';
 
@@ -21,22 +22,36 @@ function App() {
   }, [pokedex]);
 
   const mapPokemon = pokeData.map((pokemon) => {
-    const { name } = pokemon;
+    const { name, id } = pokemon;
     const animatedImage =
       pokemon.sprites.versions['generation-v']['black-white'].animated[
         'front_default'
       ];
+    const type = pokemon.types.map((type) => {
+      const { name } = type.type;
+      return (
+        <li key={name} className={`type-${name}`}>
+          {name}
+        </li>
+      );
+    });
     return (
-      <Fragment>
-        <h2>{name}</h2>
-        <img src={animatedImage} alt={name} />
-      </Fragment>
+      <div className='pokemon' key={id}>
+        <img className='pokeImage' src={animatedImage} alt={name} />
+        <div className='info-snippet'>
+          <h2>{name}</h2>
+          {id < 10 && <span>#00{id}</span>}
+          {id >= 10 && id <= 99 && <span>#0{id}</span>}
+          {id > 99 && <span>#{id}</span>}
+          <ul>{type}</ul>
+        </div>
+      </div>
     );
   });
   return (
     <div className='App'>
       <h1>Pokedex</h1>
-      {mapPokemon}
+      <div className='pokemon-container'>{mapPokemon}</div>
     </div>
   );
 }

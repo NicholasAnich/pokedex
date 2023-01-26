@@ -1,0 +1,30 @@
+.pokemon-container {
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+  gap: 1em;
+}
+
+.pokeImage {
+  height: 50px;
+}
+
+.info-snippet {
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+
+  ul {
+    text-decoration: none;
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 1em;
+  }
+}

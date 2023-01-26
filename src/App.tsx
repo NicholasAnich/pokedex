@@ -30,7 +30,7 @@ function App() {
     const type = pokemon.types.map((type) => {
       const { name } = type.type;
       return (
-        <li key={name} className={`type-${name}`}>
+        <li key={name} className={`type type-${name}`}>
           {name}
         </li>
       );
@@ -39,7 +39,7 @@ function App() {
       <div className='pokemon' key={id}>
         <img className='pokeImage' src={animatedImage} alt={name} />
         <div className='info-snippet'>
-          <h2>{name}</h2>
+          <h2 className='pokeName'>{name}</h2>
           {id < 10 && <span>#00{id}</span>}
           {id >= 10 && id <= 99 && <span>#0{id}</span>}
           {id > 99 && <span>#{id}</span>}

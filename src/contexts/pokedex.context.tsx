@@ -1,12 +1,9 @@
 import { useState, useEffect, createContext, ReactNode } from 'react';
 import { PokeData } from '../interfaces/pokemon.interfaces';
+import { Props } from '../interfaces/context.interfaces';
 import axios from 'axios';
 
 const baseUrl = 'https://pokeapi.co/api/v2/pokemon';
-
-interface Props {
-  children?: ReactNode;
-}
 
 export const PokedexContext = createContext({
   pokedex: [],
@@ -22,8 +19,8 @@ export function PokedexProvider({ children }: Props) {
       const { data } = await axios
         .get(`${baseUrl}?limit=151&offset=0`)
         .catch((err) => console.error(err));
-      const pokemons = data.results;
-      setPokedex(pokemons);
+      // const pokemons = data.results;
+      // setPokedex(pokemons);
       return data.results;
     }
 

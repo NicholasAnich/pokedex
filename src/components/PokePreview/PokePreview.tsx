@@ -1,10 +1,16 @@
 import { useContext } from 'react';
 import { PokedexContext } from '../../contexts/pokedex.context';
+import { PokeEntryContext } from '../../contexts/pokeEntry.context';
 import clsx from 'clsx';
 import styles from './pokemonPreview.module.scss';
 
 export default function PokePreview() {
   const { pokeData } = useContext(PokedexContext);
+  const { setPokeName } = useContext(PokeEntryContext);
+
+  function handlePokeName(name: string) {
+    setPokeName(name);
+  }
 
   const mapPokemon = pokeData.map((pokemon) => {
     const { id, name, pokeGif, pokeAltImg, pokeImg, stats, types, weight } =
@@ -19,7 +25,11 @@ export default function PokePreview() {
       );
     });
     return (
-      <div className={styles.pokemon} key={id}>
+      <div
+        className={styles.pokemon}
+        key={id}
+        onClick={() => handlePokeName(name)}
+      >
         <img className={styles.pokeImage} src={pokeImg} alt={name} />
         <div className={styles['info-snippet']}>
           <h2 className={styles.pokeName}>{name}</h2>

@@ -6,23 +6,36 @@ export const PokeEntryContext = createContext({
   pokeEntry: [],
 });
 
-async function getEvolutions(id = 1) {
-  const evolutionURL = `https://pokeapi.co/api/v2/evolution-chain/${id}/`;
-  const evolutions = await axios.get(evolutionURL);
-  console.log(evolutions);
+export async function getSpecies(name: string) {
+  const speciesURL = `https://pokeapi.co/api/v2/pokemon-species/${name}/`;
+  const species = await axios.get(speciesURL);
+  const speciesResponse = await species.data;
+  return speciesResponse;
+}
+
+export async function getEvolutions(url: string) {
+  const evolutions = await axios.get(url);
+  const evolutionsResponse = await evolutions.data;
+  return evolutionsResponse;
 }
 
 export function PokeEntryProvider({ children }: Props) {
-  const [pokeId, setPokeId] = useState(1);
+  const [pokeName, setPokeName] = useState('bulbasaur');
   const [pokeEntry, setPokeEntry] = useState([]);
 
   useEffect(() => {
-    getEvolutions(pokeId);
-  }, [pokeEntry]);
+    async function getPokeEntry() {
+      const species = await getSpecies(pokeName);
+      const evolutions = await getEvolutions(species.evolution_chain.url);
+      console.log(evolutions);
+    }
+    getPokeEntry();
+  }, [pokeName]);
+  // console.log(pokeEntry);
 
   const value = {
     pokeEntry,
-    setPokeId,
+    setPokeName,
   };
 
   return (

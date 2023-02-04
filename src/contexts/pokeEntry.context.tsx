@@ -13,10 +13,25 @@ export async function getSpecies(name: string) {
   return speciesResponse;
 }
 
+export async function getEvolutionNames(evolution: any, evolutions: string[]) {
+  const evolutionName = evolution.species.name;
+  // console.log(evolution);
+  evolutions.push(evolutionName);
+  console.log(evolutionName);
+  if (evolution.evolves_to.length > 0) {
+    const nextEvolution = await evolution.evolves_to[0];
+    await getEvolutionNames(nextEvolution, evolutions);
+  }
+  console.log(evolutions);
+}
+
 export async function getEvolutions(url: string) {
-  const evolutions = await axios.get(url);
-  const evolutionsResponse = await evolutions.data;
-  return evolutionsResponse;
+  const evolutionsURL = await axios.get(url);
+  const evolutionsResponse = await evolutionsURL.data;
+  let currentEvolution = evolutionsResponse.chain.evolves_to[0];
+  const evolutions = await getEvolutionNames(currentEvolution, []);
+
+  console.log(currentEvolution);
 }
 
 export function PokeEntryProvider({ children }: Props) {
@@ -27,7 +42,7 @@ export function PokeEntryProvider({ children }: Props) {
     async function getPokeEntry() {
       const species = await getSpecies(pokeName);
       const evolutions = await getEvolutions(species.evolution_chain.url);
-      // console.log(evolutions);
+      // console.log(species);
     }
     getPokeEntry();
   }, [pokeName]);

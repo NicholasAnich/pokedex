@@ -27,11 +27,10 @@ export function PokeEntryProvider({ children }: Props) {
     async function getPokeEntry() {
       const species = await getSpecies(pokeName);
       const evolutions = await getEvolutions(species.evolution_chain.url);
-      console.log(evolutions);
+      // console.log(evolutions);
     }
     getPokeEntry();
   }, [pokeName]);
-  // console.log(pokeEntry);
 
   const value = {
     pokeEntry,

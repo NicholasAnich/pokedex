@@ -30,7 +30,7 @@ export default function PokePreview() {
         key={id}
         onClick={() => handlePokeName(name)}
       >
-        <img className={styles.pokeImage} src={pokeImg} alt={name} />
+        <img className={styles.pokeImage} src={pokeGif} alt={name} />
         <div className={styles['info-snippet']}>
           <h2 className={styles.pokeName}>{name}</h2>
           {id < 10 && <span>#00{id}</span>}

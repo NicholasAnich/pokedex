@@ -5,6 +5,6 @@ export interface PokeData {
   pokeGif: string;
   pokeImg: string;
   pokeAltImg: string;
-  types: [];
+  types: { type: { name: string } }[];
   stats: [];
 }

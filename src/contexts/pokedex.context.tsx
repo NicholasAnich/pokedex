@@ -23,7 +23,7 @@ export async function getPokeInfo() {
     const pokeImg = data.sprites.other['official-artwork']['front_default'];
     const pokeAltImg = data.sprites.other.home['front_default'];
 
-    const pokeObject = {
+    const pokeObject: PokeData = {
       id: data.id,
       name: data.name,
       weight: data.weight,
@@ -33,6 +33,7 @@ export async function getPokeInfo() {
       types: data.types,
       stats: data.stats,
     };
+
     pokeInfo.push(pokeObject);
   }
 
@@ -45,12 +46,21 @@ export async function getPokeSpecies(name = 'bulbasaur') {
 }
 
 export const PokedexContext = createContext({
-  pokedex: [],
-  pokeData: [],
+  pokeData: [
+    {
+      id: 0,
+      name: '',
+      weight: 0,
+      pokeGif: '',
+      pokeImg: '',
+      pokeAltImg: '',
+      types: [{ type: { name: '' } }],
+      stats: [],
+    },
+  ],
 });
 
 export function PokedexProvider({ children }: Props) {
-  const [pokedex, setPokedex] = useState([]);
   const [pokeData, setPokeData] = useState<PokeData[]>([]);
 
   useEffect(() => {
@@ -64,7 +74,6 @@ export function PokedexProvider({ children }: Props) {
   }, []);
 
   const value = {
-    pokedex,
     pokeData,
   };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useContext } from 'react';
 
 export default function PokeEntry() {
   return <div>PokeEntry</div>;

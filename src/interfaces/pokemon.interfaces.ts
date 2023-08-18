@@ -8,3 +8,16 @@ export interface PokeData {
   types: { type: { name: string } }[];
   stats: [];
 }
+
+export interface PokeEvolution {
+  evolutionName: string;
+  trigger: { name: string };
+  item?: { name: string };
+}
+
+export interface PokeEvolutionNameAndTrigger {
+  name: string;
+  triggerLevel?: number | null;
+  triggerName: string | null;
+  item?: string;
+}

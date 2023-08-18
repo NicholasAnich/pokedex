@@ -9,7 +9,11 @@
   justify-items: center;
   gap: 1em;
 }
-
+.pokemon {
+  // border: 1px solid white;
+  padding: 1em;
+  width: 100%;
+}
 .pokeName {
   text-transform: capitalize;
   &::after {
@@ -35,7 +39,7 @@
 }
 
 .info-snippet {
-  //   border: 1px solid black;
+  // border: 1px solid black;
   display: flex;
   flex-direction: column;
   margin-top: 1em;

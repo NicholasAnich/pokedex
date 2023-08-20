@@ -46,7 +46,6 @@ export async function getCurrentPokemonInfo(pokemonName: any) {
 // *RECURSIVLY GET EVOLUTION CHAIN INFO
 export function evolutionHelperRecursion(evolutionArray: any) {
   const { species, evolves_to, evolution_details } = evolutionArray;
-  // console.log(species);
 
   let pokeInfo = [
     {
@@ -60,18 +59,7 @@ export function evolutionHelperRecursion(evolutionArray: any) {
   ];
 
   const evolutions = evolves_to.reduce((accumulator, currentValue) => {
-    console.log(currentValue);
-    return [
-      ...accumulator,
-      // {
-      //   name: currentValue.species.name,
-      //   item: currentValue.evolution_details[0]?.item,
-      //   trigger: currentValue.evolution_details[0]?.trigger,
-      //   triggerLevel: currentValue.evolution_details[0]?.min_level,
-      //   // image: getPokeImages(currentValue.species.name),
-      // },
-      ...evolutionHelperRecursion(currentValue),
-    ];
+    return [...accumulator, ...evolutionHelperRecursion(currentValue)];
   }, pokeInfo);
 
   console.log(evolutions);
@@ -83,19 +71,6 @@ export async function getEvolutions(url: string) {
   const evolutionsURL = await axios.get(url);
   const evolutionsResponse = await evolutionsURL.data;
   const evolutionsChain = await evolutionsResponse.chain;
-  // console.log(evolutionsResponse);
-  // const evolutions = [];
-  // let current = evolutionsChain.species.name;
-  // evolutions.push({ name: current });
-  // console.log(current, evolutions);
-
-  // for (let i = 0; i < evolutionsChain.evolves_to.length; i++) {
-  //   const poke = evolutionsChain.evolves_to[i];
-  //   console.log(poke);
-  // }
-
-  // console.log(evolutionsChain);
-
   return evolutionsChain;
 }
 
@@ -106,17 +81,17 @@ export function PokeEntryProvider({ children }: Props) {
   useEffect(() => {
     async function getPokeEntry() {
       const species = await getSpecies(pokeName);
-      // console.log({ species });
       const evolutionChainData = await getEvolutions(
         species.evolution_chain.url
       );
-      // console.log(evolutionChainData);
       const currentPokemonData = await getCurrentPokemonInfo(species.name);
 
       const evolutions = [
-        { name: species.name, image: currentPokemonData.sprite },
+        // { name: species.name, image: currentPokemonData.sprite },
         ...evolutionHelperRecursion(evolutionChainData),
       ];
+
+      // console.log(evolutions);
 
       // TODO: images can be accessed by id with the following url https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokeID}.png
       const pokeEntryObject = {

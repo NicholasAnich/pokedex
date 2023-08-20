@@ -32,7 +32,21 @@ export default function PokeEntry() {
   const weightPounds = Number((weight * 2.205 * 0.1).toFixed(2));
   const heightMeters = Number((height * 0.1).toFixed(1));
   const heightFeet = Number((heightMeters * 3.281).toFixed(2));
+  // TODO: images can be accessed by id with the following url https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokeID}.png
 
+  // console.log(evolution_chain);
+  const evolutionsMap = evolution_chain.map((evolution) => {
+    // console.log(evolution);
+    // console.log(evolution);
+    const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.id}.png`;
+    // console.log(imgUrl);
+    return (
+      <div key={evolution.name}>
+        <img src={imgUrl} alt={evolution.name} />
+        <span>trigger level {evolution.triggerLevel}</span>
+      </div>
+    );
+  });
   return (
     <div className={styles.pokeContainer}>
       <div>{name}</div>
@@ -45,7 +59,7 @@ export default function PokeEntry() {
       <div>
         {weightKilograms} kg ({weightPounds} lbs)
       </div>
-      {/* <div>{evolutionsMapped}</div> */}
+      <div>{evolutionsMap}</div>
     </div>
   );
 }

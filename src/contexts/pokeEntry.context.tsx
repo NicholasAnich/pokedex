@@ -22,7 +22,6 @@ export async function getPokeImages(evolutions: any) {
   const evolutionImage = await axios.get(evolutionURL);
   const evolutionImageResponse = await evolutionImage.data;
   const evolutionImageURL = evolutionImageResponse.sprites.front_default;
-
   return evolutionImageURL;
 }
 
@@ -47,24 +46,35 @@ export async function getCurrentPokemonInfo(pokemonName: any) {
 // *RECURSIVLY GET EVOLUTION CHAIN INFO
 export function evolutionHelperRecursion(evolutionArray: any) {
   const { species, evolves_to, evolution_details } = evolutionArray;
-  console.log({ evolutionArray });
-  if (!evolves_to || !evolves_to.length) {
-    return [];
-  }
+  // console.log(species);
+
+  let pokeInfo = [
+    {
+      name: species.name,
+      item: evolution_details[0]?.item?.name,
+      held_item: evolution_details[0]?.held_item?.name,
+      trigger: evolution_details[0]?.trigger?.name,
+      triggerLevel: evolution_details[0]?.min_level,
+      id: species.url.slice(-5).replace(/\D/g, '').replaceAll('/', ''),
+    },
+  ];
 
   const evolutions = evolves_to.reduce((accumulator, currentValue) => {
+    console.log(currentValue);
     return [
       ...accumulator,
-      {
-        name: currentValue.species.name,
-        item: currentValue.evolution_details[0]?.item,
-        trigger: currentValue.evolution_details[0]?.trigger,
-        triggerLevel: currentValue.evolution_details[0]?.min_level,
-        image: getPokeImages(currentValue.species.name),
-      },
+      // {
+      //   name: currentValue.species.name,
+      //   item: currentValue.evolution_details[0]?.item,
+      //   trigger: currentValue.evolution_details[0]?.trigger,
+      //   triggerLevel: currentValue.evolution_details[0]?.min_level,
+      //   // image: getPokeImages(currentValue.species.name),
+      // },
       ...evolutionHelperRecursion(currentValue),
     ];
-  }, []);
+  }, pokeInfo);
+
+  console.log(evolutions);
   return evolutions;
 }
 
@@ -72,8 +82,21 @@ export function evolutionHelperRecursion(evolutionArray: any) {
 export async function getEvolutions(url: string) {
   const evolutionsURL = await axios.get(url);
   const evolutionsResponse = await evolutionsURL.data;
-  const evolutionChain = await evolutionsResponse.chain;
-  return evolutionChain;
+  const evolutionsChain = await evolutionsResponse.chain;
+  // console.log(evolutionsResponse);
+  // const evolutions = [];
+  // let current = evolutionsChain.species.name;
+  // evolutions.push({ name: current });
+  // console.log(current, evolutions);
+
+  // for (let i = 0; i < evolutionsChain.evolves_to.length; i++) {
+  //   const poke = evolutionsChain.evolves_to[i];
+  //   console.log(poke);
+  // }
+
+  // console.log(evolutionsChain);
+
+  return evolutionsChain;
 }
 
 export function PokeEntryProvider({ children }: Props) {
@@ -91,9 +114,11 @@ export function PokeEntryProvider({ children }: Props) {
       const currentPokemonData = await getCurrentPokemonInfo(species.name);
 
       const evolutions = [
-        // { name: species.name, image: currentPokemonData.sprite },
+        { name: species.name, image: currentPokemonData.sprite },
         ...evolutionHelperRecursion(evolutionChainData),
       ];
+
+      // TODO: images can be accessed by id with the following url https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokeID}.png
       const pokeEntryObject = {
         name: species.name,
         description: species.flavor_text_entries[1].flavor_text,

@@ -44,12 +44,14 @@ export async function getCurrentPokemonInfo(pokemonName: any) {
   return pokeObject;
 }
 
-// *GET POKEMON EVOLUTION NAMES AND TRIGGERS
+// *RECURSIVLY GET EVOLUTION CHAIN INFO
 export function evolutionHelperRecursion(evolutionArray: any) {
   const { species, evolves_to, evolution_details } = evolutionArray;
+  console.log({ evolutionArray });
   if (!evolves_to || !evolves_to.length) {
     return [];
   }
+
   const evolutions = evolves_to.reduce((accumulator, currentValue) => {
     return [
       ...accumulator,
@@ -63,28 +65,29 @@ export function evolutionHelperRecursion(evolutionArray: any) {
       ...evolutionHelperRecursion(currentValue),
     ];
   }, []);
-
   return evolutions;
 }
 
+// *GET POKEMON EVOLUTIONS
 export async function getEvolutions(url: string) {
   const evolutionsURL = await axios.get(url);
   const evolutionsResponse = await evolutionsURL.data;
   const evolutionChain = await evolutionsResponse.chain;
-
   return evolutionChain;
 }
 
 export function PokeEntryProvider({ children }: Props) {
-  const [pokeName, setPokeName] = useState('');
+  const [pokeName, setPokeName] = useState('bulbasaur');
   const [pokeEntry, setPokeEntry] = useState({});
 
   useEffect(() => {
     async function getPokeEntry() {
       const species = await getSpecies(pokeName);
+      // console.log({ species });
       const evolutionChainData = await getEvolutions(
         species.evolution_chain.url
       );
+      // console.log(evolutionChainData);
       const currentPokemonData = await getCurrentPokemonInfo(species.name);
 
       const evolutions = [
@@ -118,7 +121,6 @@ export function PokeEntryProvider({ children }: Props) {
     pokeEntry,
     setPokeName,
   };
-  console.log(pokeEntry);
 
   return (
     <PokeEntryContext.Provider value={value}>

@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { PokedexContext } from '../../contexts/pokedex.context';
 import { PokeEntryContext } from '../../contexts/pokeEntry.context';
+import PokeEntry from '../PokeEntry/PokeEntry';
 import clsx from 'clsx';
 import styles from './pokemonPreview.module.scss';
 

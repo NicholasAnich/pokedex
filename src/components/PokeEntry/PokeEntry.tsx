@@ -26,27 +26,43 @@ export default function PokeEntry() {
     return <div key={ability.ability.name}>{ability.ability.name}</div>;
   });
 
-  // todo: Figure out evolutions bug where it can access all pokemon in chain AND access image
-
   const weightKilograms = weight * 0.1;
   const weightPounds = Number((weight * 2.205 * 0.1).toFixed(2));
   const heightMeters = Number((height * 0.1).toFixed(1));
   const heightFeet = Number((heightMeters * 3.281).toFixed(2));
-  // TODO: images can be accessed by id with the following url https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokeID}.png
 
-  // console.log(evolution_chain);
-  const evolutionsMap = evolution_chain.map((evolution) => {
-    // console.log(evolution);
-    // console.log(evolution);
+  //*images can be accessed by id with the following url https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokeID}.png
+  const evolutionsMap = evolution_chain?.map((evolution) => {
+    const { item } = evolution;
     const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.id}.png`;
-    // console.log(imgUrl);
+    const itemUsed = item ? item : '';
+    let capitilizedItemName;
+
+    if (item !== undefined) {
+      const pokeItem = item.split('-');
+      let stringArr: string[] = [];
+      const name = pokeItem.forEach((i) => {
+        const letter = i.charAt(0).toUpperCase();
+        const subStrings = i.slice(1);
+        const newString = letter.concat(subStrings);
+        stringArr.push(newString);
+      });
+      capitilizedItemName = stringArr.join(' ');
+    }
+
     return (
-      <div key={evolution.name}>
+      <div className={styles.evolution} key={evolution.name}>
         <img src={imgUrl} alt={evolution.name} />
-        <span>trigger level {evolution.triggerLevel}</span>
+        <div>
+          <span>
+            {evolution.trigger} {evolution.triggerLevel}
+          </span>
+          <span>{capitilizedItemName ? capitilizedItemName : ''}</span>
+        </div>
       </div>
     );
   });
+
   return (
     <div className={styles.pokeContainer}>
       <div>{name}</div>
@@ -59,7 +75,7 @@ export default function PokeEntry() {
       <div>
         {weightKilograms} kg ({weightPounds} lbs)
       </div>
-      <div>{evolutionsMap}</div>
+      <div className={styles.evolutionsContainer}>{evolutionsMap}</div>
     </div>
   );
 }
